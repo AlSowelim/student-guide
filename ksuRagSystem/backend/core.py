@@ -10,7 +10,7 @@ from langchain.chains.history_aware_retriever import create_history_aware_retrie
 from langchain.chains.retrieval import create_retrieval_chain
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
-from backend.const import INDEX_NAME
+from ksuRagSystem.backend.const import INDEX_NAME
 
 
 import os

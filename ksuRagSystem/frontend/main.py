@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit_chat import message
 import time
-from backend.core import run_llm
+from ksuRagSystem.backend.core import run_llm
 
 # Render the header immediately
 st.header("دليل الطالب")
