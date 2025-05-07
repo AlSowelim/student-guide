@@ -1,5 +1,5 @@
 import gradio as gr
-from ksuRagSystem.backend.core_with_ollama_switch import run_llm
+from core_with_ollama_switch import run_llm
 
 class ChatSession:
     def __init__(self):
