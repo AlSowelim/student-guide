@@ -51,6 +51,21 @@ retrieval_qa_chat_prompt = PromptTemplate(
     """
 )
 
+
+condense_prompt = PromptTemplate(
+    input_variables=["chat_history", "input"],
+    template="""
+    بناءً على المحادثة السابقة:
+    {chat_history}
+
+    وصيغة السؤال الجديد:
+    {input}
+
+    أعد صياغة السؤال ليستقل بذاته:
+    """
+)
+
+
 # LLM selector
 llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=OPENAI_API_KEY)
 
@@ -58,22 +73,27 @@ llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=OPENAI_API_KEY)
 # Chain setup
 def get_chain():
     retriever = vectorstore.as_retriever()
+
+    # Use custom condense prompt
     history_aware_retriever = create_history_aware_retriever(
         llm=llm,
         retriever=retriever,
-        prompt=retrieval_qa_chat_prompt  # Pass the prompt with context
+        prompt=condense_prompt
     )
+
     doc_chain = create_stuff_documents_chain(llm, retrieval_qa_chat_prompt)
-    retrieval_chain = create_retrieval_chain(history_aware_retriever, doc_chain)
-    return retrieval_chain
+    rag_chain = create_retrieval_chain(history_aware_retriever, doc_chain)
+    return rag_chain
+
 
 
 # Inference function
 def run_llm(query: str, chat_history: List[Any]) -> Dict[str, Any]:
-    # Create context from chat history
-    context = "\n".join([message[1] for message in chat_history if isinstance(message, tuple)])
-
-    # Get the chain and pass the context
     chain = get_chain()
-    response = chain.invoke({"input": query, "context": context})  # Ensure 'context' is passed
+    response = chain.invoke({
+        "input": query,
+        "chat_history": chat_history  # ✅ this is required
+    })
     return {"result": response["answer"]}
+
+
