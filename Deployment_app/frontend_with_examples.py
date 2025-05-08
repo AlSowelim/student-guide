@@ -77,7 +77,7 @@ body { direction: rtl; text-align: right; }
   font-weight: bold;
   color: #333;
 }
-""") as demo:
+""") as app:
     with gr.Row(elem_id="header-row"):
         with gr.Column(scale=1):
             gr.Image(value="ksu_logo_transparent.png", show_label=False, container=False, show_download_button=False,
@@ -113,4 +113,4 @@ body { direction: rtl; text-align: right; }
     example2.click(fn=lambda: "كيف أطلب إعادة قيد؟", outputs=prompt_input)
     example3.click(fn=lambda: "ما هي خطوات التحويل من كلية إلى أخرى؟", outputs=prompt_input)
 
-demo.launch(server_port=7865, share=True)
+app.launch(server_port=7865, share=True)
